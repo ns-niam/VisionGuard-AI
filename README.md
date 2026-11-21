@@ -1,449 +1,522 @@
-# VisionGuard AI
-
-### Deep Learning-Based Supermarket CCTV Object Detection and Intelligent Video Analytics
+# VisionGuard-AI
+### Deep Learning-Based Pedestrian Detection Using YOLO11 and the MOT17 Dataset
 
 <p align="center">
-  <strong>Computer Vision | Deep Learning | Object Detection | Multi-Object Tracking</strong>
+
+**An Object Detection Research Project**
+
+Built with PyTorch, Ultralytics YOLO11, and Google Colab
+
 </p>
 
 ---
 
-## 1. Overview
+## 1. Project Overview
 
-VisionGuard AI is a deep learning-based computer vision project designed to detect and analyze people in supermarket and retail surveillance footage.
+**VisionGuard-AI** is a deep learning-based pedestrian detection project developed as an individual bonus project for the CSCI1409 Deep Learning course at Kazakh-British Technical University (KBTU).
 
-The system aims to combine a fine-tuned YOLO object detection model with multi-object tracking and spatial analytics to provide meaningful insights from CCTV video streams.
+The project focuses on detecting pedestrians in surveillance-style images using transfer learning and pretrained YOLO11 object detection models.
 
-The project focuses on building a reproducible object detection pipeline that can be trained, evaluated, and executed using Google Colab.
+The main objective is to develop, train, evaluate, and compare multiple object detection configurations while following a reproducible experimental workflow.
 
-In addition to the core object detection task, the project explores advanced video analytics, including people counting, queue estimation, and zone monitoring.
+The project covers the complete object detection pipeline:
 
-## 2. Problem Statement
+- Dataset acquisition and annotation processing.
+- Dataset validation and sequence-wise splitting.
+- Pretrained model fine-tuning.
+- Controlled experimentation and hyperparameter optimization.
+- Model selection using validation results.
+- Independent evaluation on a held-out test set.
+- Prediction visualization and failure analysis.
+- Deployment-oriented inference preparation.
 
-Supermarkets and retail environments use surveillance cameras to monitor customer activity and store operations.
+**Final selected model:** YOLO11s with a tuned learning rate of 0.0005.
 
-However, manually reviewing surveillance footage is time-consuming and does not provide automated, real-time information about customer movement, occupancy, or queue conditions.
-
-VisionGuard AI explores how deep learning and computer vision can automate these tasks through object detection and video analysis.
-
-## 3. Project Objectives
+## 2. Project Objectives
 
 The primary objectives are:
 
-1. Develop a deep learning-based object detection model for retail surveillance footage.
-2. Fine-tune a pretrained detector using a publicly available annotated dataset.
-3. Evaluate model performance using standard object detection metrics.
-4. Conduct a controlled experiment to investigate the effect of a selected training modification.
-5. Build a reproducible training and evaluation pipeline.
-6. Extend the trained detector with multi-object tracking and CCTV analytics.
+1. Understand and prepare a real-world pedestrian detection dataset.
+2. Fine-tune pretrained YOLO11 models using transfer learning.
+3. Investigate the effect of image size and learning-rate changes.
+4. Compare different model configurations using validation metrics.
+5. Select the final model without using test results for model selection.
+6. Evaluate the selected model on an independent test set.
+7. Analyze prediction errors and identify model limitations.
+8. Prepare reproducible training and inference artifacts.
 
-## 4. System Scope
+## 3. Dataset
 
-### 4.1 Core Requirements
+### 3.1 Dataset Source
 
-The primary academic deliverable is a reproducible object detection system.
+The project uses **MOT17 (Multiple Object Tracking Benchmark 2017)**.
 
-| Component | Description |
-|---|---|
-| Dataset | Public object detection dataset |
-| Initial model | Pretrained YOLO11n candidate |
-| Training | Fine-tuning using PyTorch |
-| Baseline | Initial training configuration |
-| Experiment | One controlled training modification |
-| Evaluation | Precision, Recall, mAP@0.50 |
-| Visualization | Ground-truth and predicted bounding boxes |
-| Reproducibility | Google Colab training notebook |
+- Official dataset: https://motchallenge.net/data/MOT17/
+- Hugging Face dataset mirror: https://huggingface.co/datasets/Lekim89/MOT17
 
-### 4.2 Advanced Features
+MOT17 contains surveillance-style pedestrian sequences with bounding-box annotations.
 
-The following features are planned as extensions of the trained detection model.
+Only the pedestrian class was used for this object detection task.
 
-| Feature | Purpose | Proposed Technology |
-|---|---|---|
-| Multi-object tracking | Track objects across video frames | ByteTrack |
-| People counting | Estimate entry and exit counts | Tracking + line crossing |
-| Queue estimation | Estimate customer queue occupancy | Tracking + ROI analysis |
-| Zone monitoring | Monitor occupancy in selected areas | Polygon-based ROI |
-| Movement visualization | Visualize tracked trajectories | OpenCV |
+**Dataset usage:** The original MOTChallenge terms apply. Users must review and comply with the official dataset terms. The dataset is not redistributed through this repository.
 
-These features extend the core object detection pipeline and do not replace the required training and evaluation experiments.
+### 3.2 Dataset Preparation
 
-## 5. Proposed System Architecture
+A documented subset of 2,000 images was selected from seven annotated MOT17 sequences.
 
-```text
-          CCTV Images / Recorded Videos
-                       |
-                       v
-              Data Preprocessing
-                       |
-                       v
-             YOLO Object Detector
-                 (YOLO11n)
-                       |
-                       v
-              Bounding Box Output
-                       |
-                       v
-                ByteTrack
-                       |
-          +------------+------------+
-          |            |            |
-          v            v            v
-       People       Queue        Zone
-       Counting   Estimation   Monitoring
-          |            |            |
-          +------------+------------+
-                       |
-                       v
-                Analytics Output
-                       |
-                       v
-             Annotated Video / Reports
-```
+| Split | Source sequences | Images | Annotated objects |
+|---|---|---:|---:|
+| Training | MOT17-02, 04, 05, 09 | 1,200 | 28,390 |
+| Validation | MOT17-10 | 400 | 7,854 |
+| Testing | MOT17-11, 13 | 400 | 5,216 |
+| **Total** | **7 sequences** | **2,000** | **41,460** |
 
-The initial detection model will focus on the person class.
+### 3.3 Split Strategy
 
-Additional detection classes may be introduced if suitable datasets and compatible annotations are verified.
+The dataset was divided by source sequence rather than randomly splitting individual frames.
 
-## 6. Dataset Strategy
+This approach prevents frames from the same source video from appearing across different subsets.
 
-The project will use publicly available object detection datasets with bounding-box annotations.
+A deterministic temporal sampling strategy using `numpy.linspace` was applied to select frames from each sequence.
 
-Dataset selection will consider:
+Training randomness was configured with seed `42`. Temporal frame selection itself did not use random sampling.
 
-- Relevance to retail and surveillance environments.
-- Image quality and camera perspectives.
-- Annotation accuracy.
-- Dataset size and class distribution.
-- Usage terms and licensing.
-- Compatibility with the YOLO annotation format.
+### 3.4 Annotation Format
 
-### 6.1 Dataset Candidates
+Original MOT17 pedestrian annotations were converted into YOLO format.
 
-| Dataset | Intended Purpose | Status |
-|---|---|---|
-| MALL-VLM | Surveillance-based person detection and tracking research | Under evaluation |
-| RetailAction | Retail environment and human-object interaction research | Under evaluation |
-| Shopping Trolley Detection | Optional trolley detection extension | Under evaluation |
+Each label contains:
 
-Dataset sources:
+`class_id x_center y_center width height`
 
-- [MALL-VLM](https://github.com/harshm2601/mall-vlm-devkit)
-- [RetailAction](https://huggingface.co/datasets/standard-cognition/RetailAction)
-- [Shopping Trolley Detection](https://data.mendeley.com/datasets/vj9g4mn4vv/1)
+Bounding-box coordinates are normalized relative to image dimensions.
 
-No dataset will be used for training until its licensing, annotation format, and suitability have been checked.
+The pedestrian class mapping is:
 
-### 6.2 Dataset Preparation
+| Class ID | Class |
+|---:|---|
+| 0 | person |
 
-The preparation pipeline will include:
+Bounding boxes were clipped to image boundaries, and fully invalid boxes were discarded.
 
-1. Dataset acquisition.
-2. Annotation inspection.
-3. Bounding-box validation.
-4. Image and label consistency checks.
-5. Duplicate and near-duplicate detection.
-6. Train, validation, and test splitting.
-7. Dataset statistics generation.
-8. Ground-truth visualization.
+### 3.5 Dataset Validation
 
-The initial target is approximately 1,000 annotated images, subject to dataset availability and annotation quality.
+The prepared dataset was audited for:
 
-The proposed split is:
+- Missing image-label pairs.
+- Corrupted images.
+- Invalid bounding boxes.
+- Incorrect annotation structure.
+- Split consistency.
 
-| Split | Target Images |
+Final validation:
+
+| Check | Result |
 |---|---:|
-| Training | 700 |
-| Validation | 150 |
-| Testing | 150 |
-| Total | 1,000 |
+| Training images | 1,200 |
+| Validation images | 400 |
+| Test images | 400 |
+| Missing labels | 0 |
+| Corrupted images | 0 |
+| Invalid annotations | 0 |
+| Total valid annotations | 41,460 |
 
-These are preliminary targets. Final counts will be determined after dataset auditing.
+## 4. Technology Stack
 
-Data leakage will be avoided by keeping related frames, source videos, and identities within appropriate splits.
-
-The final README will document actual image counts, object counts, class names, annotation format, split methodology, and random seed.
-
-## 7. Deep Learning Model
-
-### 7.1 Proposed Architecture
-
-The initial model candidate is YOLO11n with pretrained weights.
-
-Technology:
-
-- PyTorch
-- Ultralytics YOLO
-- Transfer learning
-- GPU-accelerated training
-
-The initial model will focus on detecting people in surveillance images.
-
-The final model configuration will be documented after dataset and environment compatibility checks.
-
-### 7.2 Baseline Training
-
-The baseline model will be fine-tuned on the training dataset.
-
-The following parameters will be recorded:
-
-| Parameter | Initial Proposal |
+| Component | Technology |
 |---|---|
-| Architecture | YOLO11n |
-| Initial weights | Pretrained YOLO11n |
-| Image size | 640 |
-| Epochs | 50 |
-| Batch size | 16 |
-| Learning rate | 0.001 |
-| Random seed | 42 |
-| Training device | Google Colab GPU |
-
-These values are initial experimental settings and may be adjusted based on dataset size and available GPU memory.
-
-Training evidence will include:
-
-- Training configuration
-- Training logs
-- Learning curves
-- Validation metrics
-- Best model checkpoint
-- Training duration
-
-## 8. Controlled Experiment
-
-A second training run will investigate the effect of one intentional modification.
-
-### Proposed Experiment
-
-**Research Hypothesis:**
-
-Applying a small rotation augmentation may improve model generalization across different CCTV camera angles.
-
-| Setting | Baseline | Experiment 02 |
-|---|---|---|
-| Model | YOLO11n | YOLO11n |
-| Initial weights | Same | Same |
-| Dataset split | Same | Same |
-| Image size | 640 | 640 |
-| Epochs | Same | Same |
-| Batch size | Same | Same |
-| Learning rate | Same | Same |
-| Rotation augmentation | Default | 5 degrees |
-
-Only the selected augmentation parameter will be changed.
-
-Both experiments will be compared using validation precision, recall, mAP@0.50, and training time.
-
-An improvement is not required. The objective is to conduct a valid controlled experiment and explain the observed results.
-
-## 9. Model Evaluation
-
-The final model will be selected using validation results.
-
-The selected checkpoint will then be evaluated on the held-out test set.
-
-### Evaluation Metrics
-
-| Metric | Purpose |
-|---|---|
-| Precision | Measures the proportion of predicted positives that are correct |
-| Recall | Measures the proportion of actual objects detected |
-| mAP@0.50 | Measures detection performance using an IoU threshold of 0.50 |
-
-Evaluation settings will include the confidence threshold and IoU threshold.
-
-### Required Visual Evidence
-
-The final evaluation will include:
-
-- At least five test images with predicted bounding boxes.
-- Class names and confidence scores.
-- Three representative failure cases.
-- Explanation of likely failure causes.
-- Practical suggestions for improvement.
-
-Failure analysis will consider missed detections, false positives, incorrect classes, and inaccurate bounding boxes.
-
-## 10. Advanced CCTV Analytics
-
-After completing the required object detection experiments, the system will be extended with video analytics.
-
-### 10.1 Multi-Object Tracking
-
-ByteTrack will associate detections across consecutive video frames and assign tracking IDs.
-
-### 10.2 People Counting
-
-Virtual line-crossing logic will estimate directional entry and exit counts.
-
-### 10.3 Queue Estimation
-
-Checkout regions will be configured using polygon-based regions of interest.
-
-The system will estimate the number of tracked people within selected queue regions.
-
-### 10.4 Zone Monitoring
-
-Configurable polygon regions will support occupancy monitoring in selected areas, such as:
-
-- Store entrance
-- Shopping area
-- Checkout area
-- Restricted area
-
-These analytics will use detection and tracking outputs rather than requiring separate deep learning training.
-
-## 11. Development Environment
-
-Development and training will use separate environments.
-
-| Environment | Responsibilities |
-|---|---|
-| GitHub Codespaces | Source code development, configuration, testing, and version control |
-| Google Colab | Dataset preparation, GPU training, experiments, evaluation, and inference |
-
-The training pipeline will be maintained in reusable Python modules.
-
-The Colab notebook will execute the project pipeline from a fresh runtime using documented dependency versions.
-
-## 12. Technology Stack
-
-| Category | Technology |
-|---|---|
-| Programming Language | Python |
-| Deep Learning Framework | PyTorch |
-| Object Detection | Ultralytics YOLO |
-| Model Candidate | YOLO11n |
-| Object Tracking | ByteTrack |
-| Video Processing | OpenCV |
-| Numerical Computing | NumPy |
-| Data Analysis | Pandas |
+| Programming language | Python |
+| Deep learning framework | PyTorch |
+| Object detection framework | Ultralytics |
+| Detection architecture | YOLO11 |
+| Dataset | MOT17 |
+| Annotation format | YOLO |
+| Data processing | NumPy, OpenCV |
+| Data analysis | Pandas |
 | Visualization | Matplotlib |
-| Configuration | YAML |
-| Development | GitHub Codespaces |
-| GPU Training | Google Colab |
-| Version Control | Git and GitHub |
+| Training environment | Google Colab |
+| GPU | NVIDIA Tesla T4 |
+| Development environment | GitHub Codespaces |
+| Version control | Git and GitHub |
 
-## 13. Repository Structure
+### 4.1 Training Environment
+
+The main training environment was Google Colab.
+
+| Component | Version / Specification |
+|---|---|
+| Python | 3.13.16 |
+| PyTorch | 2.14.1+cu130 |
+| Ultralytics | 8.4.215 |
+| OpenCV | 4.14.0 |
+| NumPy | 2.4.6 |
+| Pandas | 2.2.3 |
+| GPU | NVIDIA Tesla T4 |
+| GPU Memory | Approximately 14.56 GB |
+
+## 5. Model Architecture
+
+The project uses pretrained YOLO11 object detection models.
+
+YOLO11 is a one-stage object detector that predicts object locations and class probabilities in a single forward pass.
+
+The project investigated the following configurations:
+
+| Experiment | Model | Configuration |
+|---|---|---|
+| Baseline | YOLO11n | Pretrained, 640px |
+| Experiment 02 | YOLO11n | Image size reduced to 512px |
+| Refined | YOLO11n | Fine-tuning from baseline checkpoint |
+| Model comparison | YOLO11s | Pretrained, 640px |
+| Experiment 03 | YOLO11s | Learning rate tuned to 0.0005 |
+
+The final selected model is **YOLO11s LR Tuned**.
+
+## 6. Training Configuration
+
+### 6.1 Baseline Configuration
+
+| Parameter | Value |
+|---|---|
+| Model | YOLO11n |
+| Initial weights | Pretrained YOLO11n |
+| Image size | 640 × 640 |
+| Batch size | 8 |
+| Epochs | 15 |
+| Optimizer | AdamW (resolved by auto configuration) |
+| Learning rate | 0.002 |
+| Random seed | 42 |
+| Device | NVIDIA Tesla T4 |
+| Training time | Approximately 8.75 minutes |
+
+### 6.2 Controlled Experiment — Image Size
+
+The controlled experiment investigated the impact of reducing image resolution.
+
+**Hypothesis:** Reducing image size from 640 to 512 pixels may reduce computational cost and training time, but could affect detection performance, particularly for small or distant pedestrians.
+
+Only the image size was intentionally changed.
+
+| Parameter | Baseline | Experiment 02 |
+|---|---:|---:|
+| Model | YOLO11n | YOLO11n |
+| Image size | 640 | 512 |
+| Batch size | 8 | 8 |
+| Epochs | 15 | 15 |
+| Learning rate | 0.002 | 0.002 |
+| Random seed | 42 | 42 |
+| Training time | 8.75 min | 7.22 min |
+
+### 6.3 Additional Experiments
+
+Additional experiments investigated model capacity and learning-rate optimization.
+
+**YOLO11n Refined**
+- Initialized from the baseline checkpoint.
+- Maximum additional epochs: 25.
+- Learning rate: 0.0005.
+- Early stopping was triggered after 13 additional epochs.
+
+**YOLO11s**
+- Pretrained YOLO11s initialization.
+- Image size: 640.
+- Batch size: 8.
+- Maximum epochs: 40.
+- Early stopping was triggered after 12 epochs.
+
+**YOLO11s LR Tuned**
+- Same YOLO11s architecture and pretrained initialization.
+- Learning rate changed from 0.002 to 0.0005.
+- Image size: 640.
+- Batch size: 8.
+- Maximum epochs: 40.
+- Early stopping was triggered after 18 epochs.
+
+## 7. Validation Results and Model Selection
+
+All candidate checkpoints were evaluated using the same validation configuration:
+
+- Image size: 640.
+- Confidence threshold: 0.001.
+- NMS IoU threshold: 0.70.
+
+| Model | Precision | Recall | F1 | mAP@50 | mAP@50-95 |
+|---|---:|---:|---:|---:|---:|
+| YOLO11s LR Tuned | 0.8394 | 0.4910 | 0.6196 | 0.5931 | 0.3017 |
+| YOLO11s | 0.7541 | 0.4575 | 0.5695 | 0.5504 | 0.2685 |
+| YOLO11n 512 Experiment | 0.7478 | 0.4427 | 0.5562 | 0.5202 | 0.2518 |
+| YOLO11n Refined | 0.8001 | 0.4210 | 0.5517 | 0.4848 | 0.2383 |
+| YOLO11n Baseline | 0.7533 | 0.4146 | 0.5348 | 0.4786 | 0.2296 |
+
+YOLO11s LR Tuned achieved the strongest validation performance among the evaluated configurations.
+
+Therefore, it was selected as the final model using validation results only.
+
+## 8. Final Test Evaluation
+
+The selected checkpoint was evaluated on the independent held-out test set.
+
+**Final model:** YOLO11s LR Tuned
+
+| Evaluation setting | Value |
+|---|---|
+| Test images | 400 |
+| Ground-truth objects | 5,216 |
+| Image size | 640 |
+| Confidence threshold | 0.001 |
+| NMS IoU threshold | 0.70 |
+
+### Final Test Metrics
+
+| Metric | Result |
+|---|---:|
+| Precision | **80.03%** |
+| Recall | **43.19%** |
+| F1-Score | **56.10%** |
+| mAP@50 | **50.39%** |
+| mAP@50-95 | **31.03%** |
+
+### Metric Interpretation
+
+- **Precision:** Measures how many predicted detections are correct.
+- **Recall:** Measures how many actual objects are successfully detected.
+- **F1-Score:** Harmonic mean of precision and recall.
+- **mAP@50:** Mean Average Precision at an IoU threshold of 0.50.
+- **mAP@50-95:** Average precision across IoU thresholds from 0.50 to 0.95.
+
+The model achieved relatively high precision but lower recall, indicating that some pedestrians were missed.
+
+The test evaluation above uses confidence threshold 0.001. A separate validation threshold analysis selected 0.05 based on validation F1. These configurations are reported separately to preserve the original held-out test evaluation.
+
+## 9. Prediction Visualization
+
+The final model was used to generate predictions on five representative test images.
+
+Prediction visualizations include:
+
+- Bounding boxes.
+- Predicted class names.
+- Detection confidence scores.
+
+The project also includes a sample-level ground-truth versus prediction comparison.
+
+The five-image comparison is qualitative evidence and is not a replacement for the full test-set metrics.
+
+## 10. Failure Analysis
+
+Three major categories of detection failures were identified.
+
+### 10.1 Occlusion and Crowded Scenes
+
+**Observation:** Pedestrians partially hidden behind other people or objects may not be detected.
+
+**Possible cause:** Limited visible features and overlapping bounding boxes.
+
+**Potential improvement:** Add more crowded-scene examples and evaluate suitable augmentation strategies.
+
+### 10.2 Small and Distant Pedestrians
+
+**Observation:** Small pedestrians in distant regions of an image are difficult to detect.
+
+**Possible cause:** Limited spatial detail after image resizing.
+
+**Potential improvement:** Investigate higher-resolution inference and multi-scale training.
+
+### 10.3 False-Positive Detections
+
+**Observation:** Some background regions are incorrectly detected as pedestrians.
+
+**Possible cause:** Visual similarities between background structures and pedestrian features.
+
+**Potential improvement:** Add representative hard-negative examples and evaluate confidence calibration.
+
+These explanations are plausible interpretations of observed failures, not experimentally proven causes.
+
+## 11. Inference and Deployment Preparation
+
+A production-oriented inference prototype was prepared using the final trained checkpoint.
+
+The inference pipeline supports:
+
+- Image validation.
+- Single-image inference.
+- Batch inference.
+- Configurable confidence threshold.
+- Configurable NMS IoU threshold.
+- Structured detection outputs.
+- Bounding-box visualization.
+- Inference timing.
+
+### Benchmark Results
+
+The final model was benchmarked on 32 test images using an NVIDIA Tesla T4.
+
+| Batch Size | Throughput |
+|---:|---:|
+| 1 | 10.66 images/sec |
+| 4 | 40.55 images/sec |
+| 8 | 38.14 images/sec |
+| 16 | 43.13 images/sec |
+
+The highest measured throughput was achieved with batch size 16.
+
+These are experimental measurements from one Colab T4 runtime, not production service-level guarantees.
+
+A model card, inference configuration, integrity audit, and deployment archive were also prepared.
+
+**Note:** The project currently provides a deployment-oriented inference prototype and model package. A fully hosted production service with API authentication, monitoring, and infrastructure has not been implemented.
+
+## 12. Repository Structure
+
+The repository is intended to follow this structure:
 
 ```text
 VisionGuard-AI/
 │
 ├── README.md
 ├── requirements.txt
-├── pyproject.toml
 ├── .gitignore
+│
+├── notebooks/
+│   └── VisionGuard_AI.ipynb
 │
 ├── configs/
 │   ├── dataset.yaml
-│   ├── baseline.yaml
-│   └── experiment.yaml
+│   └── inference_config.json
 │
-├── notebooks/
-│   └── visionguard_training.ipynb
+├── models/
+│   └── best.pt
 │
 ├── src/
 │   ├── data/
 │   ├── training/
 │   ├── evaluation/
-│   ├── inference/
-│   ├── tracking/
-│   ├── analytics/
-│   └── visualization/
+│   └── inference/
 │
-├── tests/
+├── reports/
+│   ├── baseline_training_report.json
+│   ├── final_test_evaluation.json
+│   └── failure_analysis.md
 │
-├── experiments/
-│   ├── baseline/
-│   └── experiment_02/
+├── metrics/
 │
-├── results/
-│   ├── metrics/
-│   ├── plots/
-│   ├── predictions/
-│   └── failure_analysis/
+├── predictions/
 │
-└── docs/
-    └── methodology.md
+├── visualizations/
+│
+└── deployment/
+    └── MODEL_CARD.md
 ```
 
-## 14. Reproducibility
+Large dataset files and model weights may be hosted externally rather than committed directly to GitHub.
 
-Reproducibility is a primary project objective.
+## 13. Installation
 
-The repository will provide:
+Clone the repository:
 
-- A documented dependency environment.
-- Dataset acquisition instructions.
-- Dataset and model configurations.
-- A reproducible Google Colab notebook.
-- Training and evaluation scripts.
-- Random seed documentation.
-- Experiment logs and learning curves.
-- Accessible final model weights.
-- Prediction examples and evaluation evidence.
+```bash
+git clone https://github.com/ns-niam/VisionGuard-AI.git
+cd VisionGuard-AI
+```
 
-Large datasets and model checkpoints may be hosted externally when necessary.
+Create and activate a virtual environment:
 
-The README will include an Open in Colab link when the notebook is published.
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
 
-## 15. Project Development Roadmap
+Install dependencies:
 
-| Phase | Work |
+```bash
+pip install -r requirements.txt
+```
+
+The exact dependency requirements will be documented in the repository.
+
+## 14. Running Inference
+
+After obtaining the final checkpoint, place it at:
+
+```text
+models/best.pt
+```
+
+The inference configuration and example usage will be documented alongside the inference source code.
+
+Training and GPU-intensive experiments were performed in Google Colab. GitHub Codespaces is used for source-code development, repository management, and lightweight testing.
+
+## 15. Reproducibility and Artifacts
+
+The project preserves the following experimental artifacts:
+
+- Dataset split manifest.
+- Dataset annotation statistics.
+- Model training configurations.
+- Baseline and experiment training reports.
+- Training logs and learning curves.
+- Validation comparison metrics.
+- Final test evaluation report.
+- Prediction visualizations.
+- Failure analysis.
+- Model integrity audit.
+- Performance benchmark.
+- Model card and deployment package.
+
+The final notebook is intended to provide the complete training and evaluation workflow from a fresh Google Colab runtime.
+
+### Important Links
+
+| Resource | Link |
 |---|---|
-| 1 | Repository initialization |
-| 2 | Dataset research and audit |
-| 3 | Dataset preparation and validation |
-| 4 | Baseline model training |
-| 5 | Controlled experiment |
-| 6 | Final test evaluation |
-| 7 | Failure analysis and visual evidence |
-| 8 | Advanced CCTV analytics |
-| 9 | Documentation and reproducibility |
-| 10 | Individual defense preparation |
+| GitHub Repository | https://github.com/ns-niam/VisionGuard-AI |
+| Google Colab Notebook | Add notebook link here |
+| Final Model Checkpoint | Add accessible checkpoint link here |
+| Dataset Source | https://motchallenge.net/data/MOT17/ |
 
-## 16. Project Limitations
+## 16. Limitations and Future Work
 
-The initial model will detect only the classes represented in its training annotations.
+Current limitations include:
 
-Performance may vary depending on:
+- Lower recall in crowded and occluded scenes.
+- Difficulty detecting small and distant pedestrians.
+- False-positive detections in complex backgrounds.
+- Evaluation limited to a selected subset of MOT17.
+- Performance measurements obtained from a single Colab GPU environment.
 
-- Camera angle and resolution.
-- Lighting conditions.
-- Object occlusion.
-- Detection distance.
-- Dataset domain differences.
-- Hardware and inference performance.
+Future improvements may include:
 
-The initial implementation will use recorded video and image inputs.
-
-Live CCTV or RTSP integration is an optional extension and is not required for the academic submission.
-
-Tracking IDs are intended for temporary within-camera tracking, not personal identification.
+1. Higher-resolution training and inference.
+2. More advanced data augmentation.
+3. Additional hard-negative training examples.
+4. Evaluation of alternative detection architectures.
+5. Multi-object tracking integration.
+6. Video-based pedestrian counting and occupancy analytics.
+7. FastAPI-based inference service.
+8. Docker-based deployment and monitoring.
 
 ## 17. Academic Information
 
-**Course:** CSCI1409 - Deep Learning  
-**Institution:** Kazakh-British Technical University  
-**Project Type:** Individual Bonus Project  
-**Submission Deadline:** 21 November 2026
+| Field | Information |
+|---|---|
+| Project | VisionGuard-AI |
+| Course | CSCI1409 — Deep Learning |
+| Institution | Kazakh-British Technical University |
+| Project Type | Individual Bonus Project |
+| Student | MD Sha Niamatullah |
+| Academic Term | Fall 2026 |
+| Submission Date | 21 November 2026 |
 
-The project follows the instructor's requirements for dataset preparation, baseline training, controlled experimentation, model evaluation, reproducibility, and individual defense.
+### Acknowledgment of AI Assistance
 
-AI-assisted development will be acknowledged in the final submission.
-
-## 18. Project Status
-
-**Current Stage:** Initial Repository Setup
-
-Core model training, dataset verification, evaluation, and advanced analytics are planned development activities.
-
-Experimental results and performance metrics will be published only after actual execution and verification.
+AI-assisted tools were used to support code development, debugging, documentation, and technical explanations. Dataset preparation, model training, experiments, evaluation, and reported results were carried out as part of this project.
 
 ---
 
-## License
+## License and Dataset Terms
 
-The license for original project code and any third-party dataset or model components will be documented separately.
+The original project code and third-party components must be considered separately.
 
-Dataset and pretrained model usage must comply with their respective licenses.
+MOT17 dataset usage is governed by the original MOTChallenge terms. Users must obtain the dataset from an authorized source and comply with its conditions.
+
+Pretrained model and framework usage is subject to their respective licenses and terms.
