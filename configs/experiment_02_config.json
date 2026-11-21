@@ -1,0 +1,18 @@
+{
+    "experiment": "experiment_02",
+    "model": "YOLO11n",
+    "initial_weights": "/content/VisionGuard-AI/models/pretrained/yolo11n.pt",
+    "image_size": 512,
+    "batch_size": 8,
+    "epochs": 15,
+    "optimizer": "auto",
+    "workers": 2,
+    "device": 0,
+    "seed": 42,
+    "deterministic": true,
+    "amp": true,
+    "cache": false,
+    "pretrained": true,
+    "hypothesis": "Reducing image resolution from 640 to 512 may reduce training time and resource consumption, but may affect small pedestrian detection performance.",
+    "only_intentional_change": "image_size: 640 -> 512"
+}

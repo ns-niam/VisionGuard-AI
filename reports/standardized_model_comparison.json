@@ -1,0 +1,47 @@
+[
+    {
+        "model": "YOLO11s LR Tuned",
+        "precision": 0.8393673039744474,
+        "recall": 0.49100234902439,
+        "f1": 0.619574141693208,
+        "mAP50": 0.5930768400840245,
+        "mAP50_95": 0.301729826815716,
+        "checkpoint": "/content/VisionGuard-AI/models/yolo11s_lr_tuned/best.pt"
+    },
+    {
+        "model": "YOLO11s",
+        "precision": 0.754087117705142,
+        "recall": 0.45747389865036925,
+        "f1": 0.5694722246780584,
+        "mAP50": 0.5504344687732359,
+        "mAP50_95": 0.26846047109029075,
+        "checkpoint": "/content/VisionGuard-AI/models/yolo11s/best.pt"
+    },
+    {
+        "model": "YOLO11n 512 Experiment",
+        "precision": 0.7477997535122587,
+        "recall": 0.44270435446906037,
+        "f1": 0.5561580257158789,
+        "mAP50": 0.5201499407943664,
+        "mAP50_95": 0.25176554306094673,
+        "checkpoint": "/content/VisionGuard-AI/models/experiment/experiment_02_best.pt"
+    },
+    {
+        "model": "YOLO11n Refined",
+        "precision": 0.8001293586180234,
+        "recall": 0.42101770277346334,
+        "f1": 0.5517249070772948,
+        "mAP50": 0.48477323082698776,
+        "mAP50_95": 0.23826021816085308,
+        "checkpoint": "/content/VisionGuard-AI/models/refined/best.pt"
+    },
+    {
+        "model": "YOLO11n Baseline",
+        "precision": 0.7533198839493228,
+        "recall": 0.41456582633053224,
+        "f1": 0.534813770614312,
+        "mAP50": 0.47860623690691617,
+        "mAP50_95": 0.22963530541017524,
+        "checkpoint": "/content/VisionGuard-AI/models/baseline/best.pt"
+    }
+]

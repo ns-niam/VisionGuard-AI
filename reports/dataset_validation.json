@@ -1,0 +1,21 @@
+{
+    "total_images": 2000,
+    "total_labels": 2000,
+    "corrupt_images": [],
+    "missing_labels": [],
+    "invalid_annotations": [],
+    "split_counts": {
+        "train": {
+            "images": 1200,
+            "labels": 1200
+        },
+        "val": {
+            "images": 400,
+            "labels": 400
+        },
+        "test": {
+            "images": 400,
+            "labels": 400
+        }
+    }
+}

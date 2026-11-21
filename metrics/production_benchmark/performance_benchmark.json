@@ -1,0 +1,53 @@
+{
+    "project": "VisionGuard-AI",
+    "model": "YOLO11s LR Tuned",
+    "image_size": 640,
+    "confidence_threshold": 0.05,
+    "nms_iou_threshold": 0.7,
+    "device": "Tesla T4",
+    "benchmark_images": 32,
+    "warmup_runs": 2,
+    "repeats": 3,
+    "results": [
+        {
+            "batch_size": 1,
+            "images_processed": 96,
+            "total_time_seconds": 9.0095,
+            "average_batch_latency_ms": 93.85,
+            "p95_batch_latency_ms": 208.77,
+            "throughput_images_per_second": 10.66,
+            "peak_gpu_memory_mb": 184.93,
+            "status": "success"
+        },
+        {
+            "batch_size": 4,
+            "images_processed": 96,
+            "total_time_seconds": 2.3676,
+            "average_batch_latency_ms": 98.65,
+            "p95_batch_latency_ms": 103.39,
+            "throughput_images_per_second": 40.55,
+            "peak_gpu_memory_mb": 261.86,
+            "status": "success"
+        },
+        {
+            "batch_size": 8,
+            "images_processed": 96,
+            "total_time_seconds": 2.5171,
+            "average_batch_latency_ms": 209.76,
+            "p95_batch_latency_ms": 237.79,
+            "throughput_images_per_second": 38.14,
+            "peak_gpu_memory_mb": 366.99,
+            "status": "success"
+        },
+        {
+            "batch_size": 16,
+            "images_processed": 96,
+            "total_time_seconds": 2.2259,
+            "average_batch_latency_ms": 370.98,
+            "p95_batch_latency_ms": 428.23,
+            "throughput_images_per_second": 43.13,
+            "peak_gpu_memory_mb": 565.71,
+            "status": "success"
+        }
+    ]
+}

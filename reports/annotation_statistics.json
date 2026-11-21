@@ -1,0 +1,58 @@
+{
+  "MOT17-02-FRCNN": {
+    "selected_frames": 300,
+    "original_person_boxes": 9292,
+    "clipped_boxes": 158,
+    "dropped_boxes": 0,
+    "saved_boxes": 9292,
+    "empty_frames": 0
+  },
+  "MOT17-04-FRCNN": {
+    "selected_frames": 300,
+    "original_person_boxes": 13587,
+    "clipped_boxes": 3518,
+    "dropped_boxes": 0,
+    "saved_boxes": 13587,
+    "empty_frames": 0
+  },
+  "MOT17-05-FRCNN": {
+    "selected_frames": 300,
+    "original_person_boxes": 2468,
+    "clipped_boxes": 551,
+    "dropped_boxes": 0,
+    "saved_boxes": 2468,
+    "empty_frames": 0
+  },
+  "MOT17-09-FRCNN": {
+    "selected_frames": 300,
+    "original_person_boxes": 3043,
+    "clipped_boxes": 340,
+    "dropped_boxes": 0,
+    "saved_boxes": 3043,
+    "empty_frames": 0
+  },
+  "MOT17-10-FRCNN": {
+    "selected_frames": 400,
+    "original_person_boxes": 7855,
+    "clipped_boxes": 304,
+    "dropped_boxes": 1,
+    "saved_boxes": 7854,
+    "empty_frames": 0
+  },
+  "MOT17-11-FRCNN": {
+    "selected_frames": 200,
+    "original_person_boxes": 2107,
+    "clipped_boxes": 156,
+    "dropped_boxes": 0,
+    "saved_boxes": 2107,
+    "empty_frames": 0
+  },
+  "MOT17-13-FRCNN": {
+    "selected_frames": 200,
+    "original_person_boxes": 3109,
+    "clipped_boxes": 111,
+    "dropped_boxes": 0,
+    "saved_boxes": 3109,
+    "empty_frames": 0
+  }
+}

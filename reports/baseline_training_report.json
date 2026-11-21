@@ -1,0 +1,32 @@
+{
+    "experiment": "baseline",
+    "model": "YOLO11n",
+    "gpu": "Tesla T4",
+    "epochs_requested": 15,
+    "training_time_seconds": 524.75,
+    "training_time_minutes": 8.75,
+    "run_directory": "/content/VisionGuard-AI/runs/baseline",
+    "best_checkpoint": "/content/VisionGuard-AI/runs/baseline/weights/best.pt",
+    "last_checkpoint": "/content/VisionGuard-AI/runs/baseline/weights/last.pt",
+    "preserved_checkpoint": "/content/VisionGuard-AI/models/baseline/best.pt",
+    "results_csv": "/content/VisionGuard-AI/runs/baseline/results.csv",
+    "config": {
+        "experiment": "baseline",
+        "model": "YOLO11n",
+        "initial_weights": "yolo11n.pt",
+        "dataset": "/content/VisionGuard-AI/dataset/processed/data.yaml",
+        "image_size": 640,
+        "batch_size": 8,
+        "epochs": 15,
+        "optimizer": "auto",
+        "workers": 2,
+        "device": 0,
+        "seed": 42,
+        "deterministic": true,
+        "amp": true,
+        "cache": false,
+        "pretrained": true,
+        "validation_during_training": true,
+        "test_during_training": false
+    }
+}

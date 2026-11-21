@@ -1,0 +1,4 @@
+import type { Detection, ModelInfo } from "@/types";
+const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1";
+async function request<T>(path: string, init?: RequestInit): Promise<T> { const response = await fetch(`${API}${path}`, init); if (!response.ok) throw new Error((await response.json().catch(() => null))?.detail ?? "API request failed"); return response.json(); }
+export const api = { model: () => request<ModelInfo>("/model/info"), history: (search = "") => request<{ items: Detection[]; total: number }>(`/detections${search ? `?search=${encodeURIComponent(search)}` : ""}`), detection: (id: string) => request<Detection>(`/detections/${id}`), upload: (file: File, confidence: number, iou: number) => { const form = new FormData(); form.append("file", file); return request<Detection>(`/detection/image?confidence=${confidence}&iou=${iou}&image_size=640`, { method: "POST", body: form }); } };

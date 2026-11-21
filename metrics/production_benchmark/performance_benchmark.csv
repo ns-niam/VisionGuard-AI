@@ -1,0 +1,5 @@
+batch_size,images_processed,total_time_seconds,average_batch_latency_ms,p95_batch_latency_ms,throughput_images_per_second,peak_gpu_memory_mb,status
+1,96,9.0095,93.85,208.77,10.66,184.93,success
+4,96,2.3676,98.65,103.39,40.55,261.86,success
+8,96,2.5171,209.76,237.79,38.14,366.99,success
+16,96,2.2259,370.98,428.23,43.13,565.71,success

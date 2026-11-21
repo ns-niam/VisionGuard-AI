@@ -1,0 +1,102 @@
+{
+    "project": "VisionGuard-AI",
+    "audit_type": "Production Model Integrity Audit",
+    "audit_timestamp_utc": "2026-11-21T00:39:26.602660+00:00",
+    "integrity_status": "PASS",
+    "model": {
+        "checkpoint": "/content/VisionGuard-AI/models/final/best.pt",
+        "checkpoint_size_mb": 18.263,
+        "sha256": "0612b5df629412f28e5bd1cd1ba98c3c2987225d84ba827e0497a626f6ca7e5c",
+        "architecture": "YOLO11s LR Tuned",
+        "parameter_count": 9428179,
+        "trainable_parameter_count": 0,
+        "class_names": {
+            "0": "person"
+        },
+        "number_of_classes": 1
+    },
+    "dataset": {
+        "dataset_path": "/content/VisionGuard-AI/dataset/processed",
+        "class_names": {
+            "0": "person"
+        },
+        "number_of_classes": 1,
+        "splits": {
+            "train": {
+                "image_directory_exists": true,
+                "label_directory_exists": true,
+                "image_count": 1200,
+                "label_count": 1200
+            },
+            "val": {
+                "image_directory_exists": true,
+                "label_directory_exists": true,
+                "image_count": 400,
+                "label_count": 400
+            },
+            "test": {
+                "image_directory_exists": true,
+                "label_directory_exists": true,
+                "image_count": 400,
+                "label_count": 400
+            }
+        }
+    },
+    "runtime": {
+        "python_version": "3.13.16 (main, Oct  1 2026, 15:40:24) [GCC 13.3.0]",
+        "platform": "Linux-6.6.159+-x86_64-with-glibc2.39",
+        "pytorch_version": "2.14.1+cu130",
+        "ultralytics_version": "8.4.215",
+        "cuda_version": "13.0",
+        "gpu_available": true,
+        "gpu_name": "Tesla T4",
+        "installed_packages": {
+            "torch": "2.14.1+cu130",
+            "ultralytics": "8.4.215",
+            "numpy": "2.4.6",
+            "pandas": "2.2.3",
+            "opencv-python": "5.0.0.93",
+            "opencv-python-headless": "5.0.0.93",
+            "PyYAML": "6.0.3",
+            "matplotlib": "3.10.0",
+            "Pillow": "11.3.0"
+        }
+    },
+    "required_files": {
+        "final_model": {
+            "path": "/content/VisionGuard-AI/models/final/best.pt",
+            "exists": true,
+            "size_bytes": 19150170
+        },
+        "dataset_config": {
+            "path": "/content/VisionGuard-AI/dataset/processed/data.yaml",
+            "exists": true,
+            "size_bytes": 128
+        },
+        "baseline_report": {
+            "path": "/content/VisionGuard-AI/reports/baseline_training_report.json",
+            "exists": true,
+            "size_bytes": 1104
+        },
+        "final_test_report": {
+            "path": "/content/VisionGuard-AI/reports/final_test_evaluation.json",
+            "exists": true,
+            "size_bytes": 536
+        },
+        "model_comparison": {
+            "path": "/content/VisionGuard-AI/metrics/standardized_model_comparison.csv",
+            "exists": true,
+            "size_bytes": 874
+        },
+        "failure_analysis": {
+            "path": "/content/VisionGuard-AI/reports/failure_analysis.json",
+            "exists": true,
+            "size_bytes": 2558
+        },
+        "prediction_visualization": {
+            "path": "/content/VisionGuard-AI/predictions/final_test_conf005/five_test_predictions.png",
+            "exists": true,
+            "size_bytes": 7372918
+        }
+    }
+}

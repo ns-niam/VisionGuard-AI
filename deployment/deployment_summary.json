@@ -1,0 +1,22 @@
+{
+    "project": "VisionGuard-AI",
+    "model": "YOLO11s LR Tuned",
+    "package_path": "/content/VisionGuard-AI/VisionGuard_AI_Deployment.zip",
+    "package_size_mb": 16.81,
+    "files_included": [
+        "best.pt",
+        "inference_config.json",
+        "MODEL_CARD.md",
+        "final_test_evaluation.json",
+        "production_integrity_audit.json",
+        "performance_benchmark.json",
+        "failure_analysis.json",
+        "standardized_model_comparison.csv",
+        "confidence_threshold_comparison.csv",
+        "baseline_config.json",
+        "dependencies.json",
+        "requirements-colab.txt"
+    ],
+    "archive_verified": true,
+    "created_at_utc": "2026-11-21T00:43:12.562120+00:00"
+}

@@ -1,0 +1,67 @@
+{
+    "project": "VisionGuard-AI",
+    "analysis_type": "Qualitative failure analysis",
+    "dataset": "Custom sequence-wise MOT17 test split",
+    "sampled_test_images": 5,
+    "matching_iou_threshold": 0.5,
+    "sample_summary": {
+        "ground_truth_objects": 73,
+        "predictions": 81,
+        "matched_true_positives": 33,
+        "false_positives": 48,
+        "false_negatives": 40
+    },
+    "failure_cases": [
+        {
+            "image": "MOT17-11-FRCNN_000900.jpg",
+            "category": "Crowded scene and overlapping pedestrians",
+            "ground_truth": 19,
+            "predictions": 21,
+            "matched": 7,
+            "false_positives": 14,
+            "missed_objects": 12,
+            "likely_causes": [
+                "Pedestrian overlap and occlusion",
+                "Difficult localization in crowded regions",
+                "Confusion between nearby pedestrians"
+            ],
+            "practical_next_step": "Inspect difficult crowded examples and evaluate higher-resolution training."
+        },
+        {
+            "image": "MOT17-13-FRCNN_000373.jpg",
+            "category": "Small and distant pedestrians",
+            "ground_truth": 20,
+            "predictions": 21,
+            "matched": 7,
+            "false_positives": 14,
+            "missed_objects": 13,
+            "likely_causes": [
+                "Small pedestrian bounding boxes",
+                "Distant objects with limited visual detail",
+                "Dense pedestrian groups"
+            ],
+            "practical_next_step": "Investigate multi-scale training and small-object detection."
+        },
+        {
+            "image": "MOT17-13-FRCNN_000750.jpg",
+            "category": "Background false detections and localization errors",
+            "ground_truth": 6,
+            "predictions": 6,
+            "matched": 2,
+            "false_positives": 4,
+            "missed_objects": 4,
+            "likely_causes": [
+                "Background confusion",
+                "Inaccurate bounding box localization",
+                "Low visual detail for distant pedestrians"
+            ],
+            "practical_next_step": "Inspect background hard negatives and bounding box localization errors."
+        }
+    ],
+    "limitations": [
+        "The analysis uses only five sampled test images.",
+        "Failure counts are based on one-to-one matching at IoU 0.50.",
+        "These sample counts must not be interpreted as full test-set metrics.",
+        "The test set is not used for further model tuning."
+    ]
+}

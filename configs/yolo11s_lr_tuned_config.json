@@ -1,0 +1,19 @@
+{
+    "experiment": "yolo11s_lower_learning_rate",
+    "architecture": "YOLO11s",
+    "initial_weights": "yolo11s.pt",
+    "image_size": 640,
+    "batch_size": 8,
+    "maximum_epochs": 40,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0005,
+    "momentum": 0.9,
+    "patience": 10,
+    "workers": 2,
+    "seed": 42,
+    "deterministic": true,
+    "amp": true,
+    "cache": false,
+    "hypothesis": "A lower learning rate may stabilize weight updates and improve validation generalization while balancing precision, recall and mAP.",
+    "only_intentional_change": "Learning rate: 0.002 -> 0.0005"
+}

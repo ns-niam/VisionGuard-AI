@@ -1,0 +1,17 @@
+{
+    "repository": "Lekim89/MOT17",
+    "sequences": [
+        "MOT17-02-FRCNN",
+        "MOT17-04-FRCNN",
+        "MOT17-05-FRCNN",
+        "MOT17-09-FRCNN",
+        "MOT17-10-FRCNN",
+        "MOT17-11-FRCNN",
+        "MOT17-13-FRCNN"
+    ],
+    "image_count": 5316,
+    "annotation_files": 7,
+    "metadata_files": 7,
+    "image_size_mb": 842.83,
+    "download_time_seconds": 437.55
+}

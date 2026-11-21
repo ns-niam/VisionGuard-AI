@@ -1,0 +1,20 @@
+{
+    "experiment": "yolo11s_architecture_comparison",
+    "architecture": "YOLO11s",
+    "initial_weights": "yolo11s.pt",
+    "image_size": 640,
+    "batch_size": 8,
+    "maximum_epochs": 40,
+    "optimizer": "auto",
+    "workers": 2,
+    "device": 0,
+    "seed": 42,
+    "deterministic": true,
+    "amp": true,
+    "cache": false,
+    "patience": 10,
+    "pretrained": true,
+    "validation_during_training": true,
+    "test_during_training": false,
+    "hypothesis": "The larger YOLO11s architecture may improve pedestrian detection performance compared with YOLO11n, potentially at the cost of increased computation and inference latency."
+}

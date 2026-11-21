@@ -1,0 +1,21 @@
+{
+    "model": "YOLO11s LR Tuned",
+    "checkpoint": "best.pt",
+    "task": "pedestrian_detection",
+    "image_size": 640,
+    "confidence_threshold": 0.05,
+    "nms_iou_threshold": 0.7,
+    "max_detections": 300,
+    "class_names": {
+        "0": "person"
+    },
+    "input_formats": [
+        "jpg",
+        "jpeg",
+        "png",
+        "bmp",
+        "webp"
+    ],
+    "recommended_batch_size": 4,
+    "device": "cuda_if_available"
+}

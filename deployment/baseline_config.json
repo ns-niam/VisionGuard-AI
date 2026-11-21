@@ -1,0 +1,19 @@
+{
+    "experiment": "baseline",
+    "model": "YOLO11n",
+    "initial_weights": "yolo11n.pt",
+    "dataset": "/content/VisionGuard-AI/dataset/processed/data.yaml",
+    "image_size": 640,
+    "batch_size": 8,
+    "epochs": 15,
+    "optimizer": "auto",
+    "workers": 2,
+    "device": 0,
+    "seed": 42,
+    "deterministic": true,
+    "amp": true,
+    "cache": false,
+    "pretrained": true,
+    "validation_during_training": true,
+    "test_during_training": false
+}
