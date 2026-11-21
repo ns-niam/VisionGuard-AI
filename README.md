@@ -61,6 +61,16 @@ The final checkpoint was selected using validation results. The held-out test se
 16. [Academic Information](#academic-information)
 17. [Dataset and Third-Party Licenses](#dataset-and-third-party-licenses)
 
+### Training Notebook
+
+The complete training and evaluation workflow is documented
+in the Jupyter Notebook.
+
+- [VisionGuard AI Training Notebook](notebooks/VisionGuard_AI_Training.ipynb)
+
+The notebook covers dataset preparation, annotation conversion,
+data validation, model training, controlled experiments,
+evaluation, and prediction visualization.
 ---
 
 ## Project Objectives
